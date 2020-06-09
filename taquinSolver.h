@@ -7,7 +7,8 @@
 
  But         : Implémente une classe permettant la résolution d'un jeu de taquin.
 
- Remarque(s) : /
+ Remarque(s) : Pour une grille résolue, tente de trouver le chemin le plus court
+               jusqu'à l'état initial.
 
  Compilateur : MinGW-g++ 6.3.0
  -----------------------------------------------------------------------------------
@@ -19,6 +20,7 @@
 #include <vector> // std::vector
 #include <array>  // std::array
 #include <map>    // std::map
+#include <queue>  // std::queue
 
 #include <iostream> // std::cout, std::cin, std::endl
 
@@ -29,8 +31,10 @@ const unsigned EMPTY_CELL = 0;
 using element = unsigned;
 using Grid    = std::array<element, DIMENSION*DIMENSION>;
 using Grids   = std::vector<Grid>;
-using GridMap = std::map<Grid, Grid*>;
+using GridMap = std::map<const Grid, const Grid*>;
 
+
+enum class PieceToMove{ LEFT = -1, RIGHT = 1, TOP = - (int)DIMENSION, BOTTOM = DIMENSION };
 
 class TaquinSolver
 {
@@ -40,6 +44,8 @@ public:
     * @brief Saved state of grid to solve.
     */
    Grid initialGrid;
+
+   Grid solvedGrid;
 
    /**
     * @brief Contains multiple grid state with their parents.
@@ -68,19 +74,30 @@ private:
     * @param grid[in] Grid to check.
     * @return True if solved else false.
     */
-   static bool isSolved(const Grid& grid);
+   bool isInit(const Grid& grid);
 
    /**
-    * @brief Fill the gridMap with iterations of
+    * @brief Fill the gridMap with iterations of initialGrid and so on...
     */
    void generateBFS();
 
    /**
-    * @brief For a given grid, create the next possibles plays.
-    * @param grid[in] Grid to generate next states.
-    * @return Vector of generated grids.
+    * @brief For the given grid, generates all possible next states.
+    * @param parentGrid[in] Grid to base next moves on.
+    * @param nextGrids[out] Stores the generated grids.
+    * @details If a generated grid is already in the gridMap, she is not pushed in queue.
     */
-   Grids generateNextState(const Grid& grid) const;
+   void generateNextGrids(const Grid* parentGrid, std::queue<const Grid*>& generatedGrids);
+
+   /**
+    * @brief Moves the left/right/top/bottom piece next to the empty cell and add it to gridMap.
+    * @param grid[in] Grid to edit.
+    * @param emptyPos Position of the empty cell.
+    * @param pieceToMove Relative position of the cell to move.
+    * @param nextGrids[out] Stores the generated grids.
+    * @details if the grid is already in the map, it isn't pushed neither in queue ether in queue.
+    */
+   void moveAndAdd(const Grid* grid, size_t emptyPos, PieceToMove pieceToMove, std::queue<const Grid*>& generatedGrids);
 
    /**
     * @brief For a given index on the grid, determines if it is on first row.
@@ -109,6 +126,10 @@ private:
     * @return True if on last column.
     */
    static bool isLastCol(size_t position);
+
+   bool isSolved(const Grid &grid);
+
+   void printPath(const Grid& configToStart);
 
 };
 
