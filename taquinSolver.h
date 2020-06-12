@@ -7,8 +7,8 @@
 
  But         : Implémente une classe permettant la résolution d'un jeu de taquin.
 
- Remarque(s) : Pour une grille résolue, tente de trouver le chemin le plus court
-               jusqu'à l'état initial.
+ Remarque(s) : Pour une grille initiale, tente de trouver le chemin le plus court
+               jusqu'à l'état résolu.
 
                Ne fonctionne pas avec une grille 4*4 par manque
                d'optimisation mémoire.
@@ -20,7 +20,6 @@
 #ifndef ASD1_LABO11_TAQUINSOLVER_H
 #define ASD1_LABO11_TAQUINSOLVER_H
 
-#include <vector> // std::vector
 #include <array>  // std::array
 #include <map>    // std::map
 #include <queue>  // std::queue
@@ -91,7 +90,7 @@ private:
    /**
     * @brief Génère horizontalement les enfant de gridMap et les y ajoute si pas encore présents
     */
-   void generateBFS();
+   void generateBFSUntilSolved();
 
    /**
     * @brief Pour une grille données, génère les prochains états possibles
@@ -106,6 +105,13 @@ private:
     * @param pieceToMove Pièce a déplacer.
     */
    void moveAndAdd(const Grid* grid, size_t emptyPos, PieceToMove pieceToMove);
+
+   /**
+    * @brief Tente d'ajouter grid dans gridMap si pas encore présente.
+    * @param grid Grille à tenter d'ajouter.
+    * @param parent Pointeur vers la grille parent.
+    */
+   void tryInsertion(const Grid& grid, const Grid* parent);
 
    /**
     * @biref Détermine si l'indice de la case vide se trouve sur la première ligne.
@@ -139,7 +145,14 @@ private:
     * @brief Depuis une config, affiche les déplacement à effectuer jusqu'a atteindre solvedGrid
     * @param configToStart grille depuis laquelle afficher les déplacement
     */
-   void printPath(const Grid& configToStart);
+   void printPath();
+
+   /**
+    * @brief pour une grille donnée, récupre sont parent dans gridMap.
+    * @param grid Grille à trouver le parent.
+    * @return Pointeur sur la grille parent si succès sinon nullptr;
+    */
+   const Grid* getParent(const Grid& grid);
 
 };
 

@@ -26,7 +26,8 @@ void TaquinSolver::initConfig()
 
 void TaquinSolver::solveConfig()
 {
-   generateBFS();
+   generateBFSUntilSolved();
+   printPath();
 }
 
 bool TaquinSolver::isInit(const Grid &grid)
@@ -39,9 +40,9 @@ bool TaquinSolver::isSolved(const Grid &grid)
    return grid == solvedGrid;
 }
 
-void TaquinSolver::generateBFS()
+void TaquinSolver::generateBFSUntilSolved()
 {
-   // Inserting initial grid
+   // Insertion de la grille initiale.
    auto insertResult = gridMap.insert(std::make_pair(solvedGrid, &solvedGrid));
    generatedGrids.push(&insertResult.first->first);
 
@@ -51,7 +52,6 @@ void TaquinSolver::generateBFS()
 
       if(isInit(*generatedGrids.front()))
       {
-         printPath(*generatedGrids.front());
          return;
       }
 
@@ -89,10 +89,14 @@ void TaquinSolver::moveAndAdd(const Grid* grid, size_t emptyPos, PieceToMove pie
    Grid generatedGrid = *grid;
    std::swap(generatedGrid[emptyPos], generatedGrid[emptyPos + (size_t)pieceToMove]);
 
-   // If it is the first generation of the grid
-   if(gridMap.find(generatedGrid) == gridMap.end())
+   tryInsertion(generatedGrid, grid);
+}
+
+void TaquinSolver::tryInsertion(const Grid& grid, const Grid* parent)
+{
+   if(gridMap.find(grid) == gridMap.end())
    {
-      auto insertResult = gridMap.insert(std::make_pair(generatedGrid, grid));
+      auto insertResult = gridMap.insert(std::make_pair(grid, parent));
       generatedGrids.push(&insertResult.first->first);
    }
 }
@@ -117,16 +121,36 @@ bool TaquinSolver::isLastCol(size_t position)
    return position % DIMENSION == DIMENSION - 1;
 }
 
-void TaquinSolver::printPath(const Grid& configToStart)
+void TaquinSolver::printPath()
 {
-   Grid kid    = configToStart;
-   Grid parent = *gridMap.find(configToStart)->second;
+   Grid kid    = initialGrid;
+   const Grid* parent = getParent(kid);
 
    while(not isSolved(kid))
    {
-      std::cout << (size_t) std::distance(parent.begin(), std::find(parent.begin(), parent.end(), EMPTY_CELL)) << " ";
+      if(parent == nullptr)
+      {
+         std::cout << "Erreur lors de la resolution" << std::endl;
+         return;
+      }
 
-      kid = parent;
-      parent = *gridMap.find(kid)->second;
+      std::cout << (size_t) std::distance(parent->begin(), std::find(parent->begin(), parent->end(), EMPTY_CELL)) << " ";
+
+      kid = *parent;
+      parent = getParent(kid);
+   }
+}
+
+const Grid* TaquinSolver::getParent(const Grid& grid)
+{
+   GridMap::iterator it;
+
+   if((it = gridMap.find(grid)) != gridMap.end())
+   {
+      return it->second;
+   }
+   else
+   {
+      return nullptr;
    }
 }

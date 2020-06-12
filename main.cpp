@@ -21,7 +21,7 @@
 int main ()
 {
    // Initialisation du résolveur.
-   TaquinSolver taquinSolver = {};
+   TaquinSolver taquinSolver;
 
    // Réception de la configuration initiale.
    std::cout << "Entrez la configuration initiale: " << std::endl;
