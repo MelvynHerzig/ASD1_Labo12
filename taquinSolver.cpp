@@ -97,20 +97,6 @@ void TaquinSolver::moveAndAdd(const Grid* grid, size_t emptyPos, PieceToMove pie
    }
 }
 
-void TaquinSolver::printPath(const Grid& configToStart)
-{
-   Grid kid    = configToStart;
-   Grid parent = *gridMap.find(configToStart)->second;
-
-   while(not isSolved(kid))
-   {
-      std::cout << (size_t) std::distance(parent.begin(), std::find(parent.begin(), parent.end(), EMPTY_CELL)) << " ";
-
-      kid = parent;
-      parent = *gridMap.find(kid)->second;
-   }
-}
-
 bool TaquinSolver::isFirstRow(size_t position)
 {
    return position < DIMENSION;
@@ -129,4 +115,18 @@ bool TaquinSolver::isFirstCol(size_t position)
 bool TaquinSolver::isLastCol(size_t position)
 {
    return position % DIMENSION == DIMENSION - 1;
+}
+
+void TaquinSolver::printPath(const Grid& configToStart)
+{
+   Grid kid    = configToStart;
+   Grid parent = *gridMap.find(configToStart)->second;
+
+   while(not isSolved(kid))
+   {
+      std::cout << (size_t) std::distance(parent.begin(), std::find(parent.begin(), parent.end(), EMPTY_CELL)) << " ";
+
+      kid = parent;
+      parent = *gridMap.find(kid)->second;
+   }
 }

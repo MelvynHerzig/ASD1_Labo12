@@ -107,21 +107,40 @@ private:
     */
    void moveAndAdd(const Grid* grid, size_t emptyPos, PieceToMove pieceToMove);
 
-
+   /**
+    * @biref Détermine si l'indice de la case vide se trouve sur la première ligne.
+    * @param position Position de la case vide.
+    * @return Vrai si sur la première ligne
+    */
    static bool isFirstRow(size_t position);
 
-
+    /**
+    * @biref Détermine si l'indice de la case vide se trouve sur la dernière ligne.
+    * @param position Position de la case vide.
+    * @return Vrai si sur la dernière ligne
+    */
    static bool isLastRow(size_t position);
 
-
+    /**
+    * @biref Détermine si l'indice de la case vide se trouve sur la première colonne.
+    * @param position Position de la case vide.
+    * @return Vrai si sur la première colonne
+    */
    static bool isFirstCol(size_t position);
 
-
+    /**
+    * @biref Détermine si l'indice de la case vide se trouve sur la denière colonne.
+    * @param position Position de la case vide.
+    * @return Vrai si sur la dernière colonne.
+    */
    static bool isLastCol(size_t position);
 
+   /**
+    * @brief Depuis une config, affiche les déplacement à effectuer jusqu'a atteindre solvedGrid
+    * @param configToStart grille depuis laquelle afficher les déplacement
+    */
    void printPath(const Grid& configToStart);
 
 };
-
 
 #endif //ASD1_LABO11_TAQUINSOLVER_H
