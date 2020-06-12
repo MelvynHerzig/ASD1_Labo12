@@ -15,25 +15,6 @@
 
 #include "taquinSolver.h"
 
-void printGrid(const Grid& grid)
-{
-   std::cout << "------------------" << std::endl;
-   for(size_t i = 0; i < DIMENSION; ++i)
-   {
-      std::cout << '[';
-      for(size_t j = 0; j < DIMENSION; ++j)
-      {
-         if(j) std::cout << ", ";
-         std::cout << grid[i * DIMENSION + j];
-      }
-      std::cout << ']' << std::endl;
-   }
-   std::cout << "------------------" << std::endl;
-}
-
-TaquinSolver::TaquinSolver()
-{}
-
 void TaquinSolver::initConfig()
 {
    for (size_t i = 0; i < DIMENSION * DIMENSION; ++i)
@@ -60,15 +41,13 @@ bool TaquinSolver::isSolved(const Grid &grid)
 
 void TaquinSolver::generateBFS()
 {
-   std::queue<const Grid*> generatedGrids; // Will contains generated grid to add (or not) to gridMap
-
    // Inserting initial grid
    auto insertResult = gridMap.insert(std::make_pair(solvedGrid, &solvedGrid));
    generatedGrids.push(&insertResult.first->first);
 
    while(not generatedGrids.empty())
    {
-      generateNextGrids(generatedGrids.front(), generatedGrids);
+      generateNextGrids(generatedGrids.front());
 
       if(isInit(*generatedGrids.front()))
       {
@@ -80,32 +59,32 @@ void TaquinSolver::generateBFS()
    }
 }
 
-void TaquinSolver::generateNextGrids(const Grid* parentGrid, std::queue<const Grid*>& generatedGrids)
+void TaquinSolver::generateNextGrids(const Grid* parentGrid)
 {
    size_t position = (size_t)std::distance(parentGrid->begin(), std::find(parentGrid->begin(), parentGrid->end(), EMPTY_CELL));
 
    if(not isFirstRow(position))
    {
-      moveAndAdd(parentGrid, position, PieceToMove::TOP, generatedGrids);
+      moveAndAdd(parentGrid, position, PieceToMove::TOP);
    }
 
    if(not isLastRow(position))
    {
-      moveAndAdd(parentGrid, position, PieceToMove::BOTTOM, generatedGrids);
+      moveAndAdd(parentGrid, position, PieceToMove::BOTTOM);
    }
 
    if(not isFirstCol(position))
    {
-      moveAndAdd(parentGrid, position, PieceToMove::LEFT, generatedGrids);
+      moveAndAdd(parentGrid, position, PieceToMove::LEFT);
    }
 
    if(not isLastCol(position))
    {
-      moveAndAdd(parentGrid, position, PieceToMove::RIGHT, generatedGrids);
+      moveAndAdd(parentGrid, position, PieceToMove::RIGHT);
    }
 }
 
-void TaquinSolver::moveAndAdd(const Grid* grid, size_t emptyPos, PieceToMove pieceToMove, std::queue<const Grid*>& generatedGrids)
+void TaquinSolver::moveAndAdd(const Grid* grid, size_t emptyPos, PieceToMove pieceToMove)
 {
    Grid generatedGrid = *grid;
    std::swap(generatedGrid[emptyPos], generatedGrid[emptyPos + (size_t)pieceToMove]);
@@ -123,7 +102,6 @@ void TaquinSolver::printPath(const Grid& configToStart)
    Grid kid    = configToStart;
    Grid parent = *gridMap.find(configToStart)->second;
 
-   printGrid(parent);
    while(not isSolved(kid))
    {
       std::cout << (size_t) std::distance(parent.begin(), std::find(parent.begin(), parent.end(), EMPTY_CELL)) << " ";

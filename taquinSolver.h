@@ -10,6 +10,9 @@
  Remarque(s) : Pour une grille résolue, tente de trouver le chemin le plus court
                jusqu'à l'état initial.
 
+               Ne fonctionne pas avec une grille 4*4 par manque
+               d'optimisation mémoire.
+
  Compilateur : MinGW-g++ 6.3.0
  -----------------------------------------------------------------------------------
  */
@@ -30,10 +33,9 @@ const unsigned EMPTY_CELL = 0;
 
 using element = unsigned;
 using Grid    = std::array<element, DIMENSION*DIMENSION>;
-using Grids   = std::vector<Grid>;
-using GridMap = std::map<const Grid, const Grid*>;
+using GridMap = std::map<const Grid, const Grid*>; //Enfant et parent
 
-
+// Par rapport à la pièce 0, perment de déterminer le numéro des pièces adjacentes.
 enum class PieceToMove{ LEFT = -1, RIGHT = 1, TOP = - (int)DIMENSION, BOTTOM = DIMENSION };
 
 class TaquinSolver
@@ -41,93 +43,81 @@ class TaquinSolver
 public:
 
    /**
-    * @brief Saved state of grid to solve.
-    */
-   Grid initialGrid;
-
-   Grid solvedGrid;
-
-   /**
-    * @brief Contains multiple grid state with their parents.
-    */
-   GridMap gridMap;
-
-   /**
-    * @brief Default constructor.
-    */
-   TaquinSolver();
-
-   /**
-    * @brief Lit le flux d'entrée et remplit la configuration initialState.
+    * @brief Construit la grille initiale et la grille finale.
     */
    void initConfig();
 
    /**
-    * @brief From the initial configuration searches the shortest way to solve the puzzle.
+    * @brief Génère horizontalement les grilles et affiche les déplacements à effectuer.
     */
    void solveConfig();
 
 private:
 
    /**
-    * @brief For a given grid, check if it is solved.
-    * @param grid[in] Grid to check.
-    * @return True if solved else false.
+  * @brief Grille avec l'état mélangé du plateau.
+  */
+   Grid initialGrid;
+
+   /**
+   * @brief Grille avec l'état arrangé du plateau.
+   */
+   Grid solvedGrid;
+
+   /**
+    * @brief Map contenant les différentes grilles générées avec leurs parents.
+    */
+   GridMap gridMap;
+
+   /**
+    * @brief Contient les grilles générées qui seront à traiter.
+    */
+   std::queue<const Grid*> generatedGrids;
+
+   /**
+    * @biref Pour une grille, compare si égale avec initialGrid.
+    * @param grid Grille à comparer
+    * @return Vrai si égales sinon faux.
     */
    bool isInit(const Grid& grid);
 
    /**
-    * @brief Fill the gridMap with iterations of initialGrid and so on...
+    * @biref Pour une grille, compare si égale avec solvedGrid.
+    * @param grid Grille à comparer
+    * @return Vrai si égales sinon faux.
+    */
+   bool isSolved(const Grid &grid);
+
+   /**
+    * @brief Génère horizontalement les enfant de gridMap et les y ajoute si pas encore présents
     */
    void generateBFS();
 
    /**
-    * @brief For the given grid, generates all possible next states.
-    * @param parentGrid[in] Grid to base next moves on.
-    * @param nextGrids[out] Stores the generated grids.
-    * @details If a generated grid is already in the gridMap, she is not pushed in queue.
+    * @brief Pour une grille données, génère les prochains états possibles
+    * @param parentGrid Grille à générer les prochains états
     */
-   void generateNextGrids(const Grid* parentGrid, std::queue<const Grid*>& generatedGrids);
+   void generateNextGrids(const Grid* parentGrid);
 
    /**
-    * @brief Moves the left/right/top/bottom piece next to the empty cell and add it to gridMap.
-    * @param grid[in] Grid to edit.
-    * @param emptyPos Position of the empty cell.
-    * @param pieceToMove Relative position of the cell to move.
-    * @param nextGrids[out] Stores the generated grids.
-    * @details if the grid is already in the map, it isn't pushed neither in queue ether in queue.
+    * @brief Pour la grille données, effectue le déplacement demandé.
+    * @param grid Grille a déplacer
+    * @param emptyPos Position de la case vide.
+    * @param pieceToMove Pièce a déplacer.
     */
-   void moveAndAdd(const Grid* grid, size_t emptyPos, PieceToMove pieceToMove, std::queue<const Grid*>& generatedGrids);
+   void moveAndAdd(const Grid* grid, size_t emptyPos, PieceToMove pieceToMove);
 
-   /**
-    * @brief For a given index on the grid, determines if it is on first row.
-    * @param position Index of a cell on the grid.
-    * @return True if on first row
-    */
+
    static bool isFirstRow(size_t position);
 
-   /**
-    * @brief For a given index on the grid, determines if it is on last row.
-    * @param position Index of a cell on the grid.
-    * @return True if on last row
-    */
+
    static bool isLastRow(size_t position);
 
-   /**
-    * @brief For a given index on the grid, determines if it is on first column.
-    * @param position Index of a cell on the grid.
-    * @return True if on first column.
-    */
+
    static bool isFirstCol(size_t position);
 
-   /**
-    * @brief For a given index on the grid, determines if it is on last column.
-    * @param position Index of a cell on the grid.
-    * @return True if on last column.
-    */
-   static bool isLastCol(size_t position);
 
-   bool isSolved(const Grid &grid);
+   static bool isLastCol(size_t position);
 
    void printPath(const Grid& configToStart);
 
