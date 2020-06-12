@@ -23,6 +23,7 @@
 #include <array>  // std::array
 #include <map>    // std::map
 #include <queue>  // std::queue
+#include <list>   // std::list
 
 #include <iostream> // std::cout, std::cin, std::endl
 
@@ -30,9 +31,10 @@
 const unsigned DIMENSION  = 3;
 const unsigned EMPTY_CELL = 0;
 
-using element = unsigned;
+using element = unsigned short;
 using Grid    = std::array<element, DIMENSION*DIMENSION>;
 using GridMap = std::map<const Grid, const Grid*>; //Enfant et parent
+using GeneratedGrids = std::queue<const Grid*, std::list<const Grid*>>;
 
 // Par rapport à la pièce 0, perment de déterminer le numéro des pièces adjacentes.
 enum class PieceToMove{ LEFT = -1, RIGHT = 1, TOP = - (int)DIMENSION, BOTTOM = DIMENSION };
@@ -71,7 +73,7 @@ private:
    /**
     * @brief Contient les grilles générées qui seront à traiter.
     */
-   std::queue<const Grid*> generatedGrids;
+   GeneratedGrids generatedGrids;
 
    /**
     * @biref Pour une grille, compare si égale avec initialGrid.

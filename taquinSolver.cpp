@@ -20,7 +20,7 @@ void TaquinSolver::initConfig()
    for (size_t i = 0; i < DIMENSION * DIMENSION; ++i)
    {
       std::cin >> initialGrid[i];
-      solvedGrid[i] = i;
+      solvedGrid[i] = (unsigned short)i;
    }
 }
 
@@ -123,8 +123,10 @@ bool TaquinSolver::isLastCol(size_t position)
 
 void TaquinSolver::printPath()
 {
-   Grid kid    = initialGrid;
+   Grid kid = initialGrid;
    const Grid* parent = getParent(kid);
+
+   std::cout << "Solution:" << std::endl;
 
    while(not isSolved(kid))
    {
