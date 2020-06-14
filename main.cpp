@@ -40,6 +40,7 @@
  */
 
 #include <cstdlib>  // EXIT_SUCCESS
+#include <iostream> // std::cout
 
 #include "taquinSolver.h" // TaquinSolver
 
@@ -54,6 +55,7 @@ int main ()
    taquinSolver.initConfig();
 
    // Résolution et affichage de la solution
+   std::cout << "Solution:" << std::endl;
    taquinSolver.solveConfig();
 
    return EXIT_SUCCESS;

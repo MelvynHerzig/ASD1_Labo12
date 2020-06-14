@@ -126,8 +126,6 @@ void TaquinSolver::printPath()
    Grid kid = initialGrid;
    const Grid* parent = getParent(kid);
 
-   std::cout << "Solution:" << std::endl;
-
    while(not isSolved(kid))
    {
       if(parent == nullptr)
