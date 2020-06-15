@@ -91,8 +91,9 @@ private:
 
    /**
     * @brief Génère horizontalement les enfant de gridMap et les y ajoute si pas encore présents
+    * @return Vrai si une solution a été trouvée sinon faux.
     */
-   void generateBFSUntilSolved();
+   bool generateBFSUntilSolved();
 
    /**
     * @brief Pour une grille données, génère les prochains états possibles

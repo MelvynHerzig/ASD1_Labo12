@@ -26,8 +26,14 @@ void TaquinSolver::initConfig()
 
 void TaquinSolver::solveConfig()
 {
-   generateBFSUntilSolved();
-   printPath();
+   if(generateBFSUntilSolved())
+   {
+      printPath();
+   }
+   else
+   {
+      std::cout << "Solution insoluble." << std::endl;
+   }
 }
 
 bool TaquinSolver::isInit(const Grid &grid)
@@ -40,7 +46,7 @@ bool TaquinSolver::isSolved(const Grid &grid)
    return grid == solvedGrid;
 }
 
-void TaquinSolver::generateBFSUntilSolved()
+bool TaquinSolver::generateBFSUntilSolved()
 {
    // Insertion de la grille initiale.
    auto insertResult = gridMap.insert(std::make_pair(solvedGrid, &solvedGrid));
@@ -52,11 +58,13 @@ void TaquinSolver::generateBFSUntilSolved()
 
       if(isInit(*generatedGrids.front()))
       {
-         return;
+         return true;
       }
 
       generatedGrids.pop();
    }
+
+   return false;
 }
 
 void TaquinSolver::generateNextGrids(const Grid* parentGrid)

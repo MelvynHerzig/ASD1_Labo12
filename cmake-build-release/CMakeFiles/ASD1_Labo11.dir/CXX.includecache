@@ -6,6 +6,14 @@
 
 #IncludeRegexTransform: 
 
+C:/Users/melvy/Desktop/Application/Drive/HEIG_VD/2em semestre/ADS1/ASD1_Labo12/main.cpp
+cstdlib
+-
+iostream
+-
+taquinSolver.h
+C:/Users/melvy/Desktop/Application/Drive/HEIG_VD/2em semestre/ADS1/ASD1_Labo12/taquinSolver.h
+
 C:/Users/melvy/Desktop/Application/Drive/HEIG_VD/2em semestre/ADS1/ASD1_Labo12/taquinSolver.cpp
 queue
 -
