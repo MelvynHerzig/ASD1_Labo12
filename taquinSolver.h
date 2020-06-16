@@ -80,14 +80,14 @@ private:
     * @param grid Grille à comparer
     * @return Vrai si égales sinon faux.
     */
-   bool isInit(const Grid& grid);
+   bool isInit(const Grid& grid) const;
 
    /**
     * @biref Pour une grille, compare si égale avec solvedGrid.
     * @param grid Grille à comparer
     * @return Vrai si égales sinon faux.
     */
-   bool isSolved(const Grid &grid);
+   bool isSolved(const Grid &grid) const;
 
    /**
     * @brief Génère horizontalement les enfant de gridMap et les y ajoute si pas encore présents
@@ -148,14 +148,14 @@ private:
     * @brief Depuis une config, affiche les déplacement à effectuer jusqu'a atteindre solvedGrid
     * @param configToStart grille depuis laquelle afficher les déplacement
     */
-   void printPath();
+   void printPath() const;
 
    /**
     * @brief pour une grille donnée, récupre sont parent dans gridMap.
     * @param grid Grille à trouver le parent.
     * @return Pointeur sur la grille parent si succès sinon nullptr;
     */
-   const Grid* getParent(const Grid& grid);
+   const Grid* getParent(const Grid& grid) const;
 
 };
 

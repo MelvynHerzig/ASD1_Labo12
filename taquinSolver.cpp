@@ -36,12 +36,12 @@ void TaquinSolver::solveConfig()
    }
 }
 
-bool TaquinSolver::isInit(const Grid &grid)
+bool TaquinSolver::isInit(const Grid &grid) const
 {
    return grid == initialGrid;
 }
 
-bool TaquinSolver::isSolved(const Grid &grid)
+bool TaquinSolver::isSolved(const Grid &grid) const
 {
    return grid == solvedGrid;
 }
@@ -129,7 +129,7 @@ bool TaquinSolver::isLastCol(size_t position)
    return position % DIMENSION == DIMENSION - 1;
 }
 
-void TaquinSolver::printPath()
+void TaquinSolver::printPath() const
 {
    Grid kid = initialGrid;
    const Grid* parent = getParent(kid);
@@ -149,11 +149,11 @@ void TaquinSolver::printPath()
    }
 }
 
-const Grid* TaquinSolver::getParent(const Grid& grid)
+const Grid* TaquinSolver::getParent(const Grid& grid) const
 {
-   GridMap::iterator it;
+   GridMap::const_iterator it = gridMap.find(grid);
 
-   if((it = gridMap.find(grid)) != gridMap.end())
+   if(it != gridMap.end())
    {
       return it->second;
    }

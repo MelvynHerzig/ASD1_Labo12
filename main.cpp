@@ -14,7 +14,6 @@
                sizeof(unsigned short) = 2 Bytes = E
                sizeof(void*) = 4 Bytes = P
                std:array 3*3 = 9 * E = 18 Byte = G
-               B = _deque_block_size<T, size_t>::value;
 
                Taille Queue: au plus O(2 * n + 3) * P
                Taille Map: O(n) * ( 4 * P + G)
@@ -31,8 +30,11 @@
                362880 * 34B = 0.01 GB
 
                Si on estime avec du 4*4:
-               taille grille = 256 * E = 512 Bytes
-               16! * (16 + 512) = 11'047'233 GB
+               taille grille = 16 * E = 32 Bytes
+               16! * (16 + 32) = 1'004'293 GB
+
+               Nous pouvons donc facilement dire qu'il est possible de résoudre, au
+               maximum des grilles 3*3 avec l'implémentation actuelle
 
 
  Compilateur : MinGW-g++ 6.3.0
