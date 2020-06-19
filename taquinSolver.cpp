@@ -129,10 +129,10 @@ bool TaquinSolver::isLastCol(size_t position)
    return position % DIMENSION == DIMENSION - 1;
 }
 
-void TaquinSolver::printPath() const
+void TaquinSolver::printPath()
 {
    Grid kid = initialGrid;
-   const Grid* parent = getParent(kid);
+   const Grid* parent = gridMap[kid];
 
    while(not isSolved(kid))
    {
@@ -145,20 +145,6 @@ void TaquinSolver::printPath() const
       std::cout << (size_t) std::distance(parent->begin(), std::find(parent->begin(), parent->end(), EMPTY_CELL)) << " ";
 
       kid = *parent;
-      parent = getParent(kid);
-   }
-}
-
-const Grid* TaquinSolver::getParent(const Grid& grid) const
-{
-   GridMap::const_iterator it = gridMap.find(grid);
-
-   if(it != gridMap.end())
-   {
-      return it->second;
-   }
-   else
-   {
-      return nullptr;
+      parent = gridMap[kid];
    }
 }

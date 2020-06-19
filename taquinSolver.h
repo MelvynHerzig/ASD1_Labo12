@@ -148,14 +148,7 @@ private:
     * @brief Depuis une config, affiche les déplacement à effectuer jusqu'a atteindre solvedGrid
     * @param configToStart grille depuis laquelle afficher les déplacement
     */
-   void printPath() const;
-
-   /**
-    * @brief pour une grille donnée, récupre sont parent dans gridMap.
-    * @param grid Grille à trouver le parent.
-    * @return Pointeur sur la grille parent si succès sinon nullptr;
-    */
-   const Grid* getParent(const Grid& grid) const;
+   void printPath();
 
 };
 
